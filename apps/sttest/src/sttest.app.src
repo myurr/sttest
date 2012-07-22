@@ -1,0 +1,14 @@
+{application, sttest,
+ [
+  {description, "Test web server using embedded Stampede"},
+  {vsn, "1"},
+  {registered, []},
+  {modules, [sttest]},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  stampede
+                 ]},
+  {mod, { sttest_app, []}},
+  {env, []}
+ ]}.
