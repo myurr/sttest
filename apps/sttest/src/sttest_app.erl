@@ -13,9 +13,7 @@ start() ->
 	start(normal, []).
 
 start(_StartType, _StartArgs) ->
-	io:format("Hello!~n"),
-	ok.
-%	stampede:listen(http, {all, 8080}, {callback, sttest_handler}, [{pool_size, 100}]).
+	stampede:listen([{port, 8080}], {callback, sttest_handler}, [{idle_workers, 100}]).
 
 stop(_State) ->
     ok.
