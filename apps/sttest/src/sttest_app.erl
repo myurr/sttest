@@ -10,10 +10,12 @@
 %% ===================================================================
 
 start() ->
-	start(normal, []).
+	application:start(sttest).
 
 start(_StartType, _StartArgs) ->
-	stampede:listen([{port, 8080}], {callback, sttest_handler}, [{idle_workers, 100}]).
+	io:format("Firing up the listener...~n"),
+	stampede:listen([{port, 8080}], {callback, sttest_handler}, [{idle_workers, 5}]).
 
 stop(_State) ->
+	io:format("Oh... I've died.  Bugger...~n"),
     ok.
