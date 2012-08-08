@@ -21,13 +21,13 @@ start(_StartType, _StartArgs) ->
 				{set_path, <<"/www/sites/test/">>},
 				{url, <<"/static">>, [
 					{path, <<"htdocs/">>},
-					{static_dir, <<"index.html">>}
+					{static_dir, <<"index.html">>, []}
 				]}
 			]}
 		]},
 		{method, 'ERROR', [
-			{url, <<"404">>, [{static, <<"Err we seem to be missing something here Bert.">>}]},
-			{url, <<"500">>, [{static, <<"Total failure!!">>}]}
+%			{url, <<"404">>, [{static, <<"Err we seem to be missing something here Bert.">>}]},
+%			{url, <<"500">>, [{static, <<"Total failure!!">>}]}
 		]}
 	],
 
