@@ -6,8 +6,7 @@
   {modules, [sttest]},
   {applications, [
                   kernel,
-                  stdlib,
-                  stampede
+                  stdlib
                  ]},
   {mod, { sttest_app, []}},
   {env, []}
