@@ -15,31 +15,45 @@ start() ->
 start(_StartType, _StartArgs) ->
 	io:format("Firing up the listener...~n"),
 
-	Routes = [
+	SiteRoutes = [
 		{host, [<<"localhost">>, <<"stampede.pureinnovation.com">>], [
-			{method, 'GET', [
-				{set_path, <<"/www/sites/test/">>},
-				{browser_cache_for, {{0, 0, 1}, {0, 0, 0}}},
-				{map_file, <<"/favicon.ico">>, <<"htdocs/favicon.ico">>, []},
-	%			{set_site, testsite},
-	%			{session, <<"sid">>, <<"">>},
-				{url, <<"/static">>, [
-					{path, <<"htdocs/">>},
-					{static_dir, <<"index.html">>, []}
-				]}
-			]},
-			{method, 'ERROR', [
-%				{url, <<"404">>, [{static, <<"Err we seem to be missing something here Bert.">>}]},
-%				{url, <<"500">>, [{static, <<"Total failure!!">>}]}
-			]}
+			{set_path, <<"/www/sites/test/">>},
+			{site, testsite}
 		]}
 	],
 
+	TestRoutes = [
+		{method, 'GET', [
+			{browser_cache_for, {{0, 0, 1}, {0, 0, 0}}},
+			{map_file, <<"/favicon.ico">>, <<"htdocs/favicon.ico">>, []},
+			{session, [{reset_timeout, true}]},
+			{url, <<"/static">>, [
+				{path, <<"htdocs/">>},
+				{static_dir, <<"index.html">>, []}
+			]},
+			{url, <<"/dynamic">>, [
+				{url, <<"/redirect">>, [
+					{erlang, {call, fun handler_example:dynamic/3, []}}
+				]},
+				{url, <<"/clock">>, [
+					{erlang, {call, fun handler_example:gen/3, []}}
+				]}
+			]}
+		]},
+		{method, 'ERROR', [
+%			{url, <<"404">>, [{static, <<"Err we seem to be missing something here Bert.">>}]},
+%			{url, <<"500">>, [{static, <<"Total failure!!">>}]}
+		]}
+	],
+
+	% fprof:trace(start),
 	application:start(stampede),
-	% stampede:nodes([]),
-	% stampede:create_site(testsite, [{tmpdir, <<"/tmp/stampede/testsite">>}]),
-	stampede:listen([{port, 8080}], Routes, [{idle_workers, 200}]).
+	stampede:nodes([]),
+	ok = stampede_site:create(testsite, TestRoutes, [{cache_dir, <<"/tmp/stampede/testsite">>}, {config, []}]),
+	SiteList = stampede_site:list(),
+	stampede:listen([{port, 8080}], SiteRoutes, SiteList, [{idle_workers, 200}]).
 
 stop(_State) ->
 	io:format("Oh... I've died.  Bugger...~n"),
+	% fprof:trace(stop),
     ok.
