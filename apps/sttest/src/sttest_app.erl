@@ -16,7 +16,7 @@ start(_StartType, _StartArgs) ->
 	io:format("Firing up the listener...~n"),
 
 	SiteRoutes = [
-		{host, [<<"localhost">>, <<"stampede.pureinnovation.com">>], [
+		{host, [<<"*:8080">>, <<"localhost">>, <<"stampede.pureinnovation.com">>], [
 			{set_path, <<"/www/sites/test/">>},
 			{site, testsite}
 		]}
@@ -37,6 +37,14 @@ start(_StartType, _StartArgs) ->
 				]},
 				{url, <<"/clock">>, [
 					{erlang, {call, fun handler_example:gen/3, []}}
+				]}
+			]}
+		]},
+		{method, 'POST', [
+			{url, <<"/dynamic/post">>, [
+				{content_type, <<"application/x-www-form-urlencoded">>, [
+					{post_args, {64, kb}, []},
+					{erlang, {call, fun handler_example:post_test/3, []}}
 				]}
 			]}
 		]},
