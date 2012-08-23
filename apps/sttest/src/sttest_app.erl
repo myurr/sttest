@@ -26,11 +26,11 @@ start(_StartType, _StartArgs) ->
 		{method, 'GET', [
 			{browser_cache_for, {{0, 0, 1}, {0, 0, 0}}},
 			{map_file, <<"/favicon.ico">>, <<"htdocs/favicon.ico">>, []},
-			{session, [{reset_timeout, true}]},
 			{url, <<"/static">>, [
 				{path, <<"htdocs/">>},
 				{static_dir, <<"index.html">>, []}
 			]},
+			{session, [{reset_timeout, true}]},
 			{url, <<"/dynamic">>, [
 				{url, <<"/redirect">>, [
 					{erlang, {call, fun handler_example:dynamic/3, []}}
