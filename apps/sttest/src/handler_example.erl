@@ -1,9 +1,9 @@
 -module(handler_example).
 
--export([dynamic/3, gen/3, ticker/1, post_test/3]).
+-export([dynamic/3, gen/3, ticker/1, post_test/3, news/3]).
 
 dynamic(Request, _RoutingState, _Args) ->
-	% io:format("Dynamic function has been called! ~p~n", [st_session:id(st_request:session(Request))]),
+	io:format("Dynamic function has been called! ~p~n", [st_session:id(st_request:session(Request))]),
 	{reroute, <<"/static/dynamic.html">>}.
 
 gen(Request, _RoutingState, _Args) ->
@@ -37,3 +37,15 @@ post_test(Request, _RoutingState, _Args) ->
 		),
 	{send, Response}.
 
+
+news(Request, _RoutingState, _Args) ->
+	Text = stutil:to_binary(io_lib:format("Would show news article ~p.",
+											[st_request:url_arg(Request, <<"news_id">>)])),
+	{ok, Response} = st_response:new(
+			Request, ok, [{<<"Content-Type">>, <<"text/html">>}],
+			<<"<html><head><title>News Article</title></head>",
+						"<body><div>",
+						Text/binary,
+						"</div></body></html>">>
+		),
+	{send, Response}.

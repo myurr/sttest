@@ -24,7 +24,7 @@ start(_StartType, _StartArgs) ->
 
 	TestRoutes = [
 		{method, 'GET', [
-			{browser_cache_for, {{0, 0, 1}, {0, 0, 0}}},
+			{http_expires, {{0, 0, 1}, {0, 0, 0}}},
 			{map_file, <<"/favicon.ico">>, <<"htdocs/favicon.ico">>, []},
 			{url, <<"/static">>, [
 				{path, <<"htdocs/">>},
@@ -37,6 +37,11 @@ start(_StartType, _StartArgs) ->
 				]},
 				{url, <<"/clock">>, [
 					{erlang, {call, fun handler_example:gen/3, []}}
+				]}
+			]},
+			{url, <<"/news/:news_id/*slug">>, [
+				{cache, [<<"news/article">>, {url_arg, <<"news_id">>}], [{expires, 60}], [
+					{erlang, {call, fun handler_example:news/3, []}}
 				]}
 			]}
 		]},
@@ -57,7 +62,7 @@ start(_StartType, _StartArgs) ->
 	% fprof:trace(start),
 	application:start(stampede),
 	stampede:nodes([]),
-	ok = stampede_site:create(testsite, TestRoutes, [{cache_dir, <<"/tmp/stampede/testsite">>}, {config, []}]),
+	ok = stampede_site:create(testsite, TestRoutes, []),
 	SiteList = stampede_site:list(),
 	stampede:listen([{port, 8080}], SiteRoutes, SiteList, [{idle_workers, 200}]).
 
