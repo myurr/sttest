@@ -43,7 +43,8 @@ start(_StartType, _StartArgs) ->
 				{cache, [<<"news/article">>, {url_arg, <<"news_id">>}], [{expires, 60}], [
 					{erlang, {call, fun handler_example:news/3, []}}
 				]}
-			]}
+			]},
+			{fcgi, <<"/www/sites/test/php/test.php">>, [{connect, [{"localhost", 9000}]}]}
 		]},
 		{method, 'POST', [
 			{url, <<"/dynamic/post">>, [
